@@ -20,6 +20,7 @@ public class Polynome {
         }
     }
 
+
     private int get_size() {
         return _polynome.size();
     }
@@ -57,30 +58,34 @@ public class Polynome {
         Monomial monom1 =  this.get;
         Monomial monom2 =  other
         while (monom1 != null && monom2 != null){
-
-
         }
+        return null;
 
     }
 
     public Polynome minus(Polynome polynome){
+        return null;
 
     }
 
     public Polynome derivative(Polynome polynome){
-
+    return null;
     }
+
+
 
     public String toString(){
         int size = _polynome.size();
-        for( int ind =0; ind < size ; ind++ ){
+        String polyString = "";
+        for( int ind = 0 ; ind < size ; ind++ )
+            polyString += _polynome.get(ind).toString();
 
-
-        }
-
+        return new String(polyString);
     }
 
+
     public Boolean equals(Polynome polynome){
+        return null;
 
     }
 
