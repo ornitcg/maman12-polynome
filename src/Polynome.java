@@ -1,11 +1,12 @@
 import java.util.ArrayList;
 import java.lang.String;
+import java.util.Collections;
 
 public class Polynome {
     ArrayList<Monomial> _polynome;
 
 
-    public Polynom(double[] coeffitientArr,int[] powerArr){
+    public Polynome(double[] coefArr, int[] powerArr){
         buildPolynome();
         sortPolynome();
         //throws exception of different lengths
@@ -13,12 +14,17 @@ public class Polynome {
 
 
     private void sortPolynome() {
+        Collections.sort(_polynome);
     }
 
     private void buildPolynome() {
+
     }
 
+
     public Polynome plus(Polynome polynome){
+        Monomial monom1, monom2;
+        while
 
     }
 
@@ -31,6 +37,7 @@ public class Polynome {
     }
 
     public String toString(Polynome polynome){
+
 
     }
 
