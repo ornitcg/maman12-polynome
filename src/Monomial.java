@@ -12,6 +12,12 @@ public class Monomial implements Comparable{
         _power = 0;
     }
 
+    // copy constructor
+    public Monomial(Monomial other){
+        _coefficient = other.get_coefficient();
+        _power = other.get_power();
+    }
+
 
     public Monomial(double coeffitient, int power){
         _coefficient = coeffitient;

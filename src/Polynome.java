@@ -12,6 +12,23 @@ public class Polynome {
         //throws exception of different lengths
     }
 
+    // copy constructor
+    public Polynome(Polynome other){
+        int size = other.get_size();
+        for (int ind = 0; ind < size ;  ind++){
+            _polynome.add(new Monomial(other.getMonomial(ind)));
+        }
+    }
+
+    private int get_size() {
+        return _polynome.size();
+    }
+
+
+    private Monomial getMonomial(int ind) {
+        return _polynome.get(ind);
+    }
+
 
     private void sortPolynome() {
         Collections.sort(_polynome);
@@ -22,9 +39,13 @@ public class Polynome {
     }
 
 
-    public Polynome plus(Polynome polynome){
-        Monomial monom1, monom2;
-        while
+    public Polynome plus(Polynome other){
+        Monomial monom1 =  this.get;
+        Monomial monom2 =  other
+        while (monom1 != null && monom2 != null){
+
+
+        }
 
     }
 
@@ -44,6 +65,8 @@ public class Polynome {
     public Boolean equals(Polynome polynome){
 
     }
+
+
 
 
 }
