@@ -7,11 +7,6 @@ public class Monomial implements Comparable{
     private Integer _power;
 
 
-    public Monomial(){
-        _coefficient = 0;
-        _power = 0;
-    }
-
     // copy constructor
     public Monomial(Monomial other){
         _coefficient = other.get_coefficient();

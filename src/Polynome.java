@@ -4,13 +4,30 @@ import java.util.Collections;
 
 public class Polynome {
 
+    private static final char PLUS = '+' ;
+    private static final char MINUS = '-';
+
     private ArrayList<Monomial> _polynome;
     private int _polySize;
 
 
     public Polynome(double[] coefArr, int[] powerArr){
-        _polySize = 0;
-        buildPolynome(coefArr, powerArr);
+        int size = coefArr.length;
+        double currentCoef;
+        _polySize = size;
+
+        if (coefArr.length != powerArr.length)
+            throw new ArrayIndexOutOfBoundsException("Coeffitient values  array and power values array are not of same length");
+
+        for (int ind =0; ind < size ; ind++){
+            try{
+                currentCoef = _polynome.get(ind).get_coefficient();
+                _polynome.get(ind).set_coefficient(currentCoef + coefArr[ind]);
+            }
+            catch (Exception e){
+                _polynome.add(new Monomial(coefArr[ind],powerArr[ind]));
+            }
+        }
         sortPolynome();
         //throws exception of different lengths
     }
@@ -38,41 +55,49 @@ public class Polynome {
         Collections.sort(_polynome);
     }
 
+    private Polynome polynomeOperator(Polynome other, char operation){
+        int indThis = 0, indOther = 0;
+        Polynome newPolynome = new Polynome(this);
+        double newCoef;
+        Monomial monom1 =  newPolynome.getMonomial(indThis);
+        Monomial monom2 =  other.getMonomial(indOther);
+        while (monom1 != null && monom2 != null){
+            if (monom1.get_power() < monom2.get_power())
+                indThis++;
+            else if (monom2.get_power() < monom1.get_power())
+                indOther++;
+            else{
+                newCoef = monom1.get_coefficient();
 
+                if (operation == PLUS)
+                    monom1.set_coefficient(newCoef + monom2.get_coefficient());
+                else if (operation == MINUS)
+                    monom1.set_coefficient(newCoef - monom2.get_coefficient());
 
-    private void buildPolynome(double[] coefArr, int[] powerArr) throws ArrayIndexOutOfBoundsException{
-        int size = coefArr.length;
-        double currentCoef;
-        _polySize = size;
-
-        if (coefArr.length != powerArr.length)
-            throw new ArrayIndexOutOfBoundsException("Coeffitient values  array and power values array are not of same length");
-        for (int ind =0; ind < size ; ind++){
-            try{
-                currentCoef = _polynome.get(ind).get_coefficient();
-                _polynome.get(ind).set_coefficient(currentCoef + coefArr[ind]);
             }
-            catch (Exception e){
-                _polynome.add(new Monomial(coefArr[ind],powerArr[ind]));
-            }
+            Monomial monom1 =  newPolynome.getMonomial(indThis);
+            Monomial monom2 =  other.getMonomial(indOther);
         }
-
+        return newPolynome;  // already new
     }
+
+
 
 
     public Polynome plus(Polynome other){
-       // Monomial monom1 =  this.get;
-       // Monomial monom2 =  other
-       // while (monom1 != null && monom2 != null){
-       // }
-        return null;
-
+        Polynome newPolynome = polynomeOperator(other, PLUS);
+        return newPolynome;
     }
 
-    public Polynome minus(Polynome polynome){
-        return null;
 
+
+
+    public Polynome minus(Polynome other){
+        Polynome newPolynome = polynomeOperator(other, MINUS);
+        return newPolynome;
     }
+
+
 
     public Polynome derivative(Polynome polynome){
         Polynome derivedPolynome = new Polynome(polynome); // make a copy of the current one and mane the changes on it
