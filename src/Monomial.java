@@ -44,7 +44,7 @@ public class Monomial implements Comparable{
     }
 
 
-    private int get_power() {
+    public int get_power() {
         return _power;
     }
 
@@ -54,5 +54,9 @@ public class Monomial implements Comparable{
 
     public void set_coefficient(double newCoeffitient) {
         _coefficient = newCoeffitient;
+    }
+
+    public void  set_power(int newPower){
+        _power = newPower;
     }
 }
