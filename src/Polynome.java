@@ -7,7 +7,7 @@ public class Polynome {
 
 
     public Polynome(double[] coefArr, int[] powerArr){
-        buildPolynome();
+        buildPolynome(coefArr, powerArr);
         sortPolynome();
         //throws exception of different lengths
     }
@@ -34,8 +34,22 @@ public class Polynome {
         Collections.sort(_polynome);
     }
 
-    private void buildPolynome() {
 
+
+    private void buildPolynome(double[] coefArr, int[] powerArr) throws ArrayIndexOutOfBoundsException{
+        int size = coefArr.length;
+        double currentCoef;
+        if (coefArr.length != powerArr.length)
+            throw new ArrayIndexOutOfBoundsException("Coeffitient values  array and power values array are not of same length");
+        for (int ind =0; ind < size ; ind++){
+            try{
+                currentCoef = _polynome.get(ind).get_coefficient();
+                _polynome.get(ind).set_coefficient(currentCoef + coefArr[ind]);
+            }
+            catch Exception{
+                _polynome.add(new Monomial(coefArr[ind],powerArr[ind]));
+            }
+        }
     }
 
 
@@ -57,8 +71,12 @@ public class Polynome {
 
     }
 
-    public String toString(Polynome polynome){
+    public String toString(){
+        int size = _polynome.size();
+        for( int ind =0; ind < size ; ind++ ){
 
+
+        }
 
     }
 

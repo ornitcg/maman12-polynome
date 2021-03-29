@@ -51,4 +51,8 @@ public class Monomial implements Comparable{
     public double get_coefficient() {
         return _coefficient;
     }
+
+    public void set_coefficient(double newCoeffitient) {
+        _coefficient = newCoeffitient;
+    }
 }
