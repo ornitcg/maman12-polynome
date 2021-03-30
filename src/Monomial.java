@@ -3,7 +3,7 @@
 
 public class Monomial implements Comparable{
 
-    private double _coefficient;
+    private Double _coefficient;
     private Integer _power;
 
 

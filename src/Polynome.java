@@ -1,9 +1,10 @@
 import java.util.ArrayList;
-import java.lang.String;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Polynome {
-
+    static final int FIRST = 1;
+    static final int SECOND = 2;
     private static final char PLUS = '+' ;
     private static final char MINUS = '-';
 
@@ -11,21 +12,21 @@ public class Polynome {
     private int _polySize;
 
 
-    public Polynome(double[] coefArr, int[] powerArr){
-        int size = coefArr.length;
-        double currentCoef;
+    public Polynome(ArrayList<Double> coefArr, ArrayList<Integer> powerArr){
+        int size = coefArr.size();
+        Double currentCoef;
         _polySize = size;
 
-        if (coefArr.length != powerArr.length)
-            throw new ArrayIndexOutOfBoundsException("Coeffitient values  array and power values array are not of same length");
+        if (coefArr.size() != powerArr.size())
+            throw new ArrayIndexOutOfBoundsException("Coefficient values  array and power values array are not of same length");
 
         for (int ind =0; ind < size ; ind++){
             try{
                 currentCoef = _polynome.get(ind).get_coefficient();
-                _polynome.get(ind).set_coefficient(currentCoef + coefArr[ind]);
+                _polynome.get(ind).set_coefficient(currentCoef + coefArr.get(ind));
             }
             catch (Exception e){
-                _polynome.add(new Monomial(coefArr[ind],powerArr[ind]));
+                _polynome.add(new Monomial(coefArr.get(ind),powerArr.get(ind)));
             }
         }
         sortPolynome();
@@ -58,9 +59,10 @@ public class Polynome {
     private Polynome polynomeOperator(Polynome other, char operation){
         int indThis = 0, indOther = 0;
         Polynome newPolynome = new Polynome(this);
-        double newCoef;
+        Double newCoef;
         Monomial monom1 =  newPolynome.getMonomial(indThis);
         Monomial monom2 =  other.getMonomial(indOther);
+
         while (monom1 != null && monom2 != null){
             if (monom1.get_power() < monom2.get_power())
                 indThis++;
@@ -75,8 +77,8 @@ public class Polynome {
                     monom1.set_coefficient(newCoef - monom2.get_coefficient());
 
             }
-            Monomial monom1 =  newPolynome.getMonomial(indThis);
-            Monomial monom2 =  other.getMonomial(indOther);
+            monom1 = newPolynome.getMonomial(indThis);
+            monom2 =  other.getMonomial(indOther);
         }
         return newPolynome;  // already new
     }
@@ -102,8 +104,8 @@ public class Polynome {
     public Polynome derivative(Polynome polynome){
         Polynome derivedPolynome = new Polynome(polynome); // make a copy of the current one and mane the changes on it
         Monomial currentMonome = null;
-        double currentCoef;
-        int currentPower;
+        Double currentCoef;
+        Integer currentPower;
 
         for(int ind = 0 ; ind < _polySize ; ind++ ){
             currentMonome = derivedPolynome.getMonomial(ind);
@@ -131,7 +133,62 @@ public class Polynome {
 
     }
 
+//
+
+    public static void showPolynomeMenu() {
+
+        System.out.println("\nMAIN MENU");
+        System.out.println("-----------");
+
+        System.out.println("(1) Insert new polynomials");
+        System.out.println("(2) Print Polynomials");
+        System.out.println("(3) Sum the two polynomials");
+        System.out.println("(4) Subtract polynomial#1 from polynomial#2");
+        System.out.println("(5) Subtract polynomial#2 from polynomial#1");
+        System.out.println("(6) Derive polynomial#1");
+        System.out.println("(7) Derive polynomial#2");
+        System.out.println("(8) compare polynomials");
+        System.out.println("(9) Quit\n");
+
+    }
+
+    public static void getPolynomeValues(Scanner sc, ArrayList<Double> coefArr , ArrayList<Integer> powerArr, int polynomeNumber) {
+        Double coefVal;
+        Integer powerVal;
+        if (coefArr != null)
+            coefArr.clear();
+        if (powerArr != null)
+            powerArr.clear();
 
 
+        System.out.println("Lets fill polynomial #" + polynomeNumber + ": ");
+        System.out.println("Please insert a set of double-type values to be used as coefficients in your polynomial");
+        coefVal = sc.nextDouble();
+
+        while (true) {
+            try{
+                coefArr.add(coefVal);
+                System.out.println("Please add another coefficient value or press 'Q' to finish");
+                coefVal = sc.nextDouble();
+            }
+            catch (Exception e){
+                break;
+            }
+        }
+
+        System.out.println("Now please insert a set of integer-type values to be used as powers in your polynomial");
+        powerVal = sc.nextInt();
+        while (true) {
+            try{
+                powerArr.add(powerVal);
+                System.out.println("Please add another power value or press 'Enter' to finish");
+                powerVal = sc.nextInt();
+            }
+            catch (Exception e){
+                break;
+            }
+        }
+
+    }
 
 }
