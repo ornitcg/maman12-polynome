@@ -21,13 +21,15 @@ public class Monomial implements Comparable{
 
 
 
-    public String toString(Monomial monomial){
+    public String toString(){
         String coefStr = "",  powerStr = "";
-        if (_coefficient != 1)
+
+        if (_coefficient > 1)
             coefStr = String.valueOf(_coefficient);
-        if (_power ==1)
+
+        if (_coefficient != 0 && _power == 1)
             powerStr = "x";
-        else if (_power>1)
+        else if (_coefficient != 0 && _power > 1)
             powerStr = "x^"+ _power;
         return coefStr + powerStr;
     }
@@ -53,5 +55,9 @@ public class Monomial implements Comparable{
 
     public void  set_power(int newPower){
         _power = newPower;
+    }
+
+    public void add_coefficient(Double coef) {
+        _coefficient += coef;
     }
 }
