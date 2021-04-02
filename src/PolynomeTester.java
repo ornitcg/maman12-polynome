@@ -20,9 +20,9 @@ public class PolynomeTester {
                 case 1: // Insert New polynomes
                     sc.nextLine();
                     System.out.println("Please insert values for two polynomials as follows:");
-                    //Polynome.getPolynomeValues(sc, coefArr, powerArr, Polynome.FIRST);
-                    fillcoef(coefArr,1);
-                    fillpower(powerArr,1);
+                    Polynome.getPolynomeValues(sc, coefArr, powerArr, Polynome.FIRST);
+//                    fillcoef(coefArr,1);
+//                    fillpower(powerArr,1);
                     try {
                         pol1 = new Polynome(coefArr, powerArr);
                         System.out.println(pol1.toString());
@@ -31,11 +31,11 @@ public class PolynomeTester {
                         System.out.println(e.getMessage());
                         break;
                     }
-//                    Polynome.getPolynomeValues(sc, coefArr, powerArr, Polynome.SECOND);
-                    coefArr.clear();
-                    powerArr.clear();
-                    fillcoef(coefArr,2);
-                    fillpower(powerArr,2);
+                    Polynome.getPolynomeValues(sc, coefArr, powerArr, Polynome.SECOND);
+//                    coefArr.clear();
+//                    powerArr.clear();
+//                    fillcoef(coefArr,2);
+//                    fillpower(powerArr,2);
                     try {
                         pol2 = new Polynome(coefArr, powerArr);
                         System.out.println(pol2.toString());
@@ -60,20 +60,57 @@ public class PolynomeTester {
 
                 case 3: // sum
                     System.out.println("You chose to sum the two polynomials.");
+                    System.out.println(pol1.toString());
+                    System.out.println(pol2.toString());
                     System.out.println("The result is:");
-                    pol1.plus(pol2).toString();
+                    System.out.println(pol1.plus(pol2).toString());
                     break;
-                case 4:
+                case 4:// polynomial1 - polynomial2
+                    System.out.println("You chose to Subtract polynomial#1 from polynomial#2.");
+                    System.out.println(pol1.toString());
+                    System.out.println(pol2.toString());
+                    System.out.println("The result is:");
+                    System.out.println(pol1.minus(pol2).toString());
                     break;
-                case 5:
+                case 5: //polynomial2 - polynomial1
+                    System.out.println("You chose to Subtract polynomial#2 from polynomial#1.");
+                    System.out.println(pol1.toString());
+                    System.out.println(pol2.toString());
+                    System.out.println("The result is:");
+                    System.out.println(pol2.minus(pol1).toString());
                     break;
-                case 6:
+                case 6://Derive polynomial#1
+                    System.out.println("You chose to derive polynomial#1.");
+                    System.out.println("The original polynomial is: " + pol1.toString());
+
+                    System.out.println("The derivative is:");
+                    System.out.println((pol1.derivative()).toString());
                     break;
-                case 7:
+                case 7://Derive polynomial#2
+                    try {
+                        System.out.println("You chose to derive polynomial#2.");
+                        System.out.println("The original polynomial is: " + pol2.toString());
+
+                        System.out.println("The derivative is:");
+                        System.out.println((pol2.derivative()).toString());
+                    }
+                    catch (Exception e){
+                        System.out.println();
+                    }
                     break;
-                case 8:
+                case 8://compare polynomials
+                    try {
+                        System.out.println("You chose to compare the two polynomials.");
+                        if (pol1.equals(pol2))
+                            System.out.println("The polynomials are equals.");
+                        else System.out.println("The polynomials are not equals.");
+                    }
+                    catch (Exception e){
+                        System.out.println("One or both polynomial(s) is (are) missing");
+                    }
+
                     break;
-                case 9:
+                case 9://quit
                     break;
                 default:
 
@@ -99,17 +136,13 @@ public class PolynomeTester {
 
     public static void fillcoef(ArrayList<Double> coefArr, int number){
         if (number == 1) {
-            coefArr.add(3.0);
-            coefArr.add(3.9);
-            coefArr.add(5.0);
+            coefArr.add(1.0);
             coefArr.add(0.0);
-            coefArr.add(6.5);
+
         }
         else {
-            coefArr.add(3.1);
-            coefArr.add(2.9);
-            coefArr.add(9.0);
-            coefArr.add(8.0);
+            coefArr.add(1.0);
+
 
         }
 
@@ -117,19 +150,13 @@ public class PolynomeTester {
 
     public static void fillpower(ArrayList<Integer> powerArr, int number){
         if (number == 1) {
-            powerArr.add(1);
             powerArr.add(3);
-            powerArr.add(0);
-            powerArr.add(4);
-            powerArr.add(6);
-        }
-        else {
-            powerArr.add(4);
-            powerArr.add(0);
-            powerArr.add(2);
             powerArr.add(2);
 
         }
+        else {
+            powerArr.add(3);
+                   }
 
     }
 

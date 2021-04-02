@@ -9,37 +9,49 @@ public class Polynome {
     static final char YES = 'Y';
     static final char NO = 'N';
 
-    private static final char PLUS = '+' ;
+    private static final char PLUS = '+';
     private static final char MINUS = '-';
 
     private ArrayList<Monomial> _polynome;
     private int _polySize;
 
-
-    public Polynome(ArrayList<Double> coefArr, ArrayList<Integer> powerArr){
+    //////////////////////////////////////constructors///////////////////////////////////
+    public Polynome(ArrayList<Double> coefArr, ArrayList<Integer> powerArr) {
         int size = coefArr.size();
         Double currentCoef;
         Monomial tmpMonomial;
         _polynome = new ArrayList<Monomial>();
 
         if (coefArr.size() != powerArr.size())
-            throw new ArrayIndexOutOfBoundsException("ERROR: Coefficient values and power values are not of same amount. Please try again.");
+            throw new ArrayIndexOutOfBoundsException("********* ERROR ********* \n Coefficient values and power values are not of same amount. Please try again.");
 
-        for (int ind = 0; ind < size ; ind++){
-                if (coefArr.get(ind) != 0) {
-                    Monomial newMonomial = new Monomial(coefArr.get(ind), powerArr.get(ind));
-//                  System.out.println("[DEBUG] monomial #" + ind + " is: "+ newMonomial.toString());
-                    _polynome.add(newMonomial);
-                }
+        for (int ind = 0; ind < size; ind++) {
+            if (coefArr.get(ind) != 0) {
+                Monomial newMonomial = new Monomial(coefArr.get(ind), powerArr.get(ind));
+                _polynome.add(newMonomial);
+            }
         }
         _polySize = _polynome.size();
-        System.out.println("The not sorted polynome is: " +this.toString());
-
         sortPolynome();
-        System.out.println("The sorted polynome is: " +this.toString());
         uniteDuplicates();
         //throws exception of different lengths
     }
+
+    // copy constructor
+    public Polynome(Polynome other) {
+
+        int size = other.get_size();
+        _polynome = new ArrayList<Monomial>();
+
+        for (int ind = 0; ind < size; ind++) {
+            _polynome.add(new Monomial(other.getMonomialByIndex(ind)));
+            _polySize = other.get_size();
+        }
+        _polySize = size;
+    }
+
+////////////////////////////////////////////////////////////////////////////////////
+
 
     private void uniteDuplicates() {
         double coefTmp;
@@ -48,30 +60,16 @@ public class Polynome {
         if (_polySize <= 1)
             return;
 
-        while (ind < _polySize){
-            prevMonomial = _polynome.get(ind-1);
+        while (ind < _polySize) {
+            prevMonomial = _polynome.get(ind - 1);
             currentMonomial = _polynome.get(ind);
-            if (currentMonomial.get_power() == prevMonomial.get_power()){
+            if (currentMonomial.get_power() == prevMonomial.get_power()) {
                 coefTmp = currentMonomial.get_coefficient();
                 prevMonomial.add_coefficient(coefTmp);
                 _polynome.remove(ind);
                 _polySize--;
-            }
-            else ind++;
+            } else ind++;
         }
-    }
-
-    // copy constructor
-    public Polynome(Polynome other){
-        int size = other.get_size();
-        for (int ind = 0; ind < size ;  ind++){
-            _polynome.add(new Monomial(other.getMonomialByIndex(ind)));
-        }
-    }
-
-
-    private int get_size() {
-        return _polySize;
     }
 
 
@@ -82,9 +80,9 @@ public class Polynome {
     private Monomial getMonomialByPower(int power) {
         Monomial tmpMonomial;
 
-        for( int ind = 0 ; ind < _polySize ; ind++){
+        for (int ind = 0; ind < _polySize; ind++) {
             tmpMonomial = getMonomialByIndex(ind);
-            if (tmpMonomial.get_power() == power )
+            if (tmpMonomial.get_power() == power)
                 return tmpMonomial; // deliberately returned like this, to enable calling function, make changes on this monomial
         }
         return null;
@@ -100,15 +98,28 @@ public class Polynome {
         Polynome newPolynome = new Polynome(this); // copy of this polynome
         Double newCoef;
         Monomial monomThis, monomOther;
+        System.out.println("other size : " + other.get_size());
         while (indThis < _polySize || indOther < other.get_size()) {
-            monomThis = newPolynome.getMonomialByIndex(indThis);
-            monomOther = other.getMonomialByIndex(indOther);
+            if (newPolynome.get_size() == 0)
+                monomThis = new Monomial(0,0);
+            else
+                monomThis = newPolynome.getMonomialByIndex(indThis);
 
-            if (monomThis.get_power() < monomOther.get_power())
-                indThis++;
-            else if (monomOther.get_power() < monomThis.get_power())
+            if (other.get_size() == 0)
+                monomOther = new Monomial(0,0);
+            else
+                monomOther = new Monomial(other.getMonomialByIndex(indOther));
+
+            if (monomThis.get_power() < monomOther.get_power()) {
+                if (operation == MINUS) {
+                    newCoef = (-1) * monomOther.get_coefficient();
+                    monomOther.set_coefficient(newCoef);
+                }
+                newPolynome.addMonomial(monomOther, indThis);
                 indOther++;
-            else {
+            } else if (monomOther.get_power() < monomThis.get_power())
+                indThis++;
+            else {// equal power, just sum coeeficients
                 newCoef = monomThis.get_coefficient();
 
                 if (operation == PLUS)
@@ -116,70 +127,102 @@ public class Polynome {
                 else if (operation == MINUS)
                     monomThis.set_coefficient(newCoef - monomOther.get_coefficient());
 
+                indThis++;
+                indOther++;
             }
-            monomThis = newPolynome.getMonomialByIndex(indThis);
-            monomOther = other.getMonomialByIndex(indOther);
+        }
 
+        return new Polynome(newPolynome);
     }
 
-        return newPolynome;  // already new
+    private void addMonomial(Monomial newMonomial, int ind) {
+        _polynome.add(ind, newMonomial);
+        _polySize++;
     }
 
 
-
-
-    public Polynome plus(Polynome other){
+    public Polynome plus(Polynome other) {
         Polynome newPolynome = polynomeOperator(other, PLUS);
         return newPolynome;
     }
 
 
-
-
-    public Polynome minus(Polynome other){
+    public Polynome minus(Polynome other) {
         Polynome newPolynome = polynomeOperator(other, MINUS);
         return newPolynome;
     }
 
 
-
-    public Polynome derivative(Polynome polynome){
-        Polynome derivedPolynome = new Polynome(polynome); // make a copy of the current one and mane the changes on it
-        Monomial currentMonome = null;
+    public Polynome derivative() {
+        Polynome derivedPolynomial = new Polynome(this); // make a copy of the current polynomial and make the changes on it
+        Monomial currentMonomial = null;
         Double currentCoef;
         Integer currentPower;
+        int ind = 0 , size = derivedPolynomial.get_size();
 
-        for(int ind = 0 ; ind < _polySize ; ind++ ){
-            currentMonome = derivedPolynome.getMonomialByIndex(ind);
-            currentCoef = currentMonome.get_coefficient();
-            currentPower = currentMonome.get_power();
-            currentMonome.set_coefficient( currentCoef + currentPower );
-            currentMonome.set_power(currentPower-1);
+        while (ind < size) {
+            currentMonomial = derivedPolynomial.getMonomialByIndex(ind); // copy the raw monomial at index
+            currentCoef = currentMonomial.get_coefficient();
+            currentPower = currentMonomial.get_power();
+            if (currentPower == 0) {
+                derivedPolynomial.removeMonomial(ind);
+                size--;
+            }
+            else {
+                currentMonomial.set_coefficient(currentCoef * currentPower);
+                currentMonomial.set_power(currentPower - 1);
+                ind++;
+            }
         }
-        return derivedPolynome; // already new
+        return derivedPolynomial; // already new
+    }
+
+    private void removeMonomial(int ind) {
+        _polynome.remove(ind);
+        _polySize--;
     }
 
 
-
-    public String toString(){
-        String polyString = "";
+    public String toString() {
+        Monomial tmpMonomial = null;  // to hold the current monomial
+        String polyString = "";  // To build on it , the polynomial string
         String monomialStr = "";
+        if (_polySize == 0)
+            polyString = "0";
 
-        for( int ind = 0 ; ind < _polySize ; ind++ ) {
-            monomialStr = _polynome.get(ind).toString();
+        for (int ind = 0; ind < _polySize; ind++) {
+            tmpMonomial = _polynome.get(ind);  // get the current monomial
+            monomialStr = tmpMonomial.toString(); // get the monomial string
+
             if (!(monomialStr.isEmpty())) {
-                if ((polyString.isEmpty()))
-                    polyString = monomialStr;
-                else
-                    polyString = polyString + " + " + monomialStr;
+                if ((polyString.isEmpty())) {
+                    if (tmpMonomial.get_coefficient() < 0)
+                        polyString = "-";
+                    polyString = polyString + monomialStr;
+                } else {
+                    if (tmpMonomial.get_coefficient() < 0)
+                        polyString = polyString + " - " + monomialStr;
+                    else
+                        polyString = polyString + " + " + monomialStr;
+
+                }
             }
         }
         return polyString;
     }
 
 
-    public Boolean equals(Polynome polynome){
-        return null;
+    public Boolean equals(Polynome other) {
+        if (_polySize != other.get_size())
+            return false;
+
+        for (int ind = 0; ind < _polySize; ind++) {
+            if (!(this.getMonomialByIndex(ind).equals(other.getMonomialByIndex(ind))))
+                return false;
+
+        }
+
+        return true;
 
     }
 
@@ -193,8 +236,8 @@ public class Polynome {
         System.out.println("(1) Insert new polynomials");
         System.out.println("(2) Print Polynomials");
         System.out.println("(3) Sum the two polynomials");
-        System.out.println("(4) Subtract polynomial#1 from polynomial#2");
-        System.out.println("(5) Subtract polynomial#2 from polynomial#1");
+        System.out.println("(4) Subtract polynomial#2 from polynomial#1");
+        System.out.println("(5) Subtract polynomial#1 from polynomial#2");
         System.out.println("(6) Derive polynomial#1");
         System.out.println("(7) Derive polynomial#2");
         System.out.println("(8) compare polynomials");
@@ -202,7 +245,7 @@ public class Polynome {
 
     }
 
-    public static void getPolynomeValues(Scanner sc, ArrayList<Double> coefArr , ArrayList<Integer> powerArr, int polynomeNumber) {
+    public static void getPolynomeValues(Scanner sc, ArrayList<Double> coefArr, ArrayList<Integer> powerArr, int polynomeNumber) {
 
         if (coefArr != null)
             coefArr.clear();
@@ -214,7 +257,6 @@ public class Polynome {
         System.out.println("Now please insert a set of integer-type values to be used as powers in your polynomial");
         getPowerArr(sc, powerArr);
     }
-
 
 
     private static void getCoefArr(Scanner sc, ArrayList<Double> coefArr) {
@@ -231,8 +273,7 @@ public class Polynome {
             try {
                 coefArr.add(coefVal);
 //                System.out.println(coefVal + " is added to coefArr.");
-            }
-            catch (InputMismatchException e){
+            } catch (InputMismatchException e) {
                 System.out.println("Input is invalid. please try again.");
                 throw new InputMismatchException();
             }
@@ -254,14 +295,17 @@ public class Polynome {
             try {
                 powerArr.add(powerVal);
 //                System.out.println(powerVal + " is added to powerArr.");
-            }
-
-            catch (InputMismatchException e){
+            } catch (InputMismatchException e) {
                 System.out.println("Input is invalid. please try again.");
                 throw new InputMismatchException();
             }
         }
         valuesSc.close();
+    }
+
+
+    public int get_size() {
+        return _polySize;
     }
 
 }

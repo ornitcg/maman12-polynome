@@ -24,8 +24,8 @@ public class Monomial implements Comparable{
     public String toString(){
         String coefStr = "",  powerStr = "";
 
-        if (_coefficient > 1)
-            coefStr = String.valueOf(_coefficient);
+        if (_coefficient != 1 && _coefficient != -1)
+            coefStr = String.valueOf(Math.abs(_coefficient));
 
         if (_coefficient != 0 && _power == 1)
             powerStr = "x";
@@ -60,4 +60,12 @@ public class Monomial implements Comparable{
     public void add_coefficient(Double coef) {
         _coefficient += coef;
     }
+
+    public Boolean equals(Monomial other){
+        if (_coefficient == other.get_coefficient() && _power == other.get_power())
+            return true;
+        return false;
+    }
+
+
 }
