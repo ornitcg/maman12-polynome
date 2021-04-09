@@ -16,6 +16,12 @@ public class Polynome {
     private int _polySize;
 
     //////////////////////////////////////constructors///////////////////////////////////
+
+    /**
+     * Constructor - creates a polynome from given arrays of coefficient values and power values
+     * @param coefArr - array of coefficient values
+     * @param powerArr - array of power values
+     */
     public Polynome(ArrayList<Double> coefArr, ArrayList<Integer> powerArr) {
         int size = coefArr.size();
         Double currentCoef;
@@ -37,7 +43,10 @@ public class Polynome {
         //throws exception of different lengths
     }
 
-    // copy constructor
+    /**
+     * Copy constructor - copies a polynomial
+     * @param other - the polynomial to copy
+     */
     public Polynome(Polynome other) {
 
         int size = other.get_size();
@@ -52,7 +61,9 @@ public class Polynome {
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-
+    /**
+     * Adds up coefficients of monomials which have a similar power value
+     */
     private void uniteDuplicates() {
         double coefTmp;
         int ind = 1;
@@ -72,87 +83,128 @@ public class Polynome {
         }
     }
 
-
+    /**
+     * Gets a monomial , according to a given location (index) in the polynomial
+     * @param ind - the location of the wanted monomial
+     * @return The monomial at a requested index
+     */
     private Monomial getMonomialByIndex(int ind) {
         return _polynome.get(ind);
     }
 
-    private Monomial getMonomialByPower(int power) {
-        Monomial tmpMonomial;
-
-        for (int ind = 0; ind < _polySize; ind++) {
-            tmpMonomial = getMonomialByIndex(ind);
-            if (tmpMonomial.get_power() == power)
-                return tmpMonomial; // deliberately returned like this, to enable calling function, make changes on this monomial
-        }
-        return null;
-    }
-
-
+    /**
+     * Arranges the polynomial according to it's monomials power values, from top down
+     */
     private void sortPolynome() {
         _polynome.sort(Comparator.reverseOrder());
     }
 
-    private Polynome polynomeOperator(Polynome other, char operation) {
+    /**
+     * Sums the calling polynomial to other polynomial
+     * Does not change the original polynomial
+     * @param other - the polynomial to add
+     * @return - The polynomial resulting from the sum calculation
+     */
+    public Polynome plus(Polynome other) {
         int indThis = 0, indOther = 0;
-        Polynome newPolynome = new Polynome(this); // copy of this polynome
+        Polynome newPolynome = new Polynome(this); // copy of this polynome, an all the changes are performed on it
         Double newCoef;
-        Monomial monomThis, monomOther;
-        System.out.println("other size : " + other.get_size());
-        while (indThis < _polySize || indOther < other.get_size()) {
-            if (newPolynome.get_size() == 0)
-                monomThis = new Monomial(0,0);
-            else
-                monomThis = newPolynome.getMonomialByIndex(indThis);
+        Monomial monomThis = null, monomOther;   // to hold  current monomials
 
-            if (other.get_size() == 0)
-                monomOther = new Monomial(0,0);
-            else
-                monomOther = new Monomial(other.getMonomialByIndex(indOther));
+        if (other.get_size() == 0) // the other polynome is empty
+            return newPolynome;
+
+        if (_polySize == 0 ) // this polynomial is empty
+            return new Polynome(other);
+
+        while (indOther < other.get_size()) {
+
+            monomOther = new Monomial(other.getMonomialByIndex(indOther));
+
+            if (indThis >= newPolynome.get_size()){    // this polynome has got to its end, then just add the rest of other
+                newPolynome.appendMonomial(monomOther);
+                indOther++;
+                continue;
+            }
+            else monomThis = newPolynome.getMonomialByIndex(indThis);  // this polynome has not yest got to its end
 
             if (monomThis.get_power() < monomOther.get_power()) {
-                if (operation == MINUS) {
-                    newCoef = (-1) * monomOther.get_coefficient();
-                    monomOther.set_coefficient(newCoef);
-                }
-                newPolynome.addMonomial(monomOther, indThis);
+                newPolynome.addMonomial(monomOther, indThis); // add the higher power monomial before the current lower one
                 indOther++;
-            } else if (monomOther.get_power() < monomThis.get_power())
+            }
+            else if (monomOther.get_power() < monomThis.get_power()) // skip this monomial and check the same power at next iteration
                 indThis++;
-            else {// equal power, just sum coeeficients
-                newCoef = monomThis.get_coefficient();
 
-                if (operation == PLUS)
-                    monomThis.set_coefficient(newCoef + monomOther.get_coefficient());
-                else if (operation == MINUS)
-                    monomThis.set_coefficient(newCoef - monomOther.get_coefficient());
-
+            else {  // monomials have equal power, just sum the coeficients
+                monomThis.set_coefficient(monomThis.get_coefficient() + monomOther.get_coefficient());
                 indThis++;
                 indOther++;
             }
         }
-
         return new Polynome(newPolynome);
     }
 
+
+
+
+    /**
+     * Changes the sign of the whole polynomial
+     */
+    private void changeSign() {
+        Monomial currenMonomial = null;
+        for (int ind = 0; ind< _polySize; ind++){
+            currenMonomial = getMonomialByIndex(ind);
+            currenMonomial.changeSign();
+        }
+    }
+
+
+    /**
+     * Appends a monomial to the calling polynomial
+     * @param newMonomial - The monomial to append
+     */
+    private void appendMonomial(Monomial newMonomial) {
+        _polynome.add(newMonomial);
+        _polySize++;
+    }
+
+
+
+
+    // adds a monomial to polynomial, at a specific location (index)
+
+    /**
+     * Adds a monomial at a requested index of the polynomial order
+     * @param newMonomial - The new monomial to add
+     * @param ind - The index of the new monomial, inside the polynomial
+     */
     private void addMonomial(Monomial newMonomial, int ind) {
         _polynome.add(ind, newMonomial);
         _polySize++;
     }
 
 
-    public Polynome plus(Polynome other) {
-        Polynome newPolynome = polynomeOperator(other, PLUS);
-        return newPolynome;
-    }
-
-
+    /**
+     * Calculates the subtraction between calling polynomial and other
+     * Does not change the original polynomial
+     * @param other - the polynomial to subtract
+     * @return The polynomial resulting from the subtraction operation
+     */
     public Polynome minus(Polynome other) {
-        Polynome newPolynome = polynomeOperator(other, MINUS);
-        return newPolynome;
+        Polynome tmpOther = new Polynome(other);
+        Polynome sumPolynom = new Polynome(this);
+        tmpOther.changeSign();
+        return sumPolynom.plus(tmpOther);
     }
 
 
+    // calclates the derivative of the calling polynomial
+
+    /**
+     * Calculates the derivative of the calling polynomial
+     * Does not change the original polynomial
+     * @return - The derivative of the calling polynomial
+     */
     public Polynome derivative() {
         Polynome derivedPolynomial = new Polynome(this); // make a copy of the current polynomial and make the changes on it
         Monomial currentMonomial = null;
@@ -177,12 +229,23 @@ public class Polynome {
         return derivedPolynomial; // already new
     }
 
+
+
+
+    /**
+     * Deletes a monomial from the polynimial at a requested index
+     * @param ind - the location of the monomial to remove
+     */
     private void removeMonomial(int ind) {
         _polynome.remove(ind);
         _polySize--;
     }
 
 
+    /**
+     * Builds a string that represents the polynomial
+     * @return - The polynomial string
+     */
     public String toString() {
         Monomial tmpMonomial = null;  // to hold the current monomial
         String polyString = "";  // To build on it , the polynomial string
@@ -212,6 +275,12 @@ public class Polynome {
     }
 
 
+
+    /**
+     * Finds if the two polynimials are fully equal
+     * @param other - The polynomial to compare to
+     * @return - true- if polynomials are similar and false, otherwise
+     */
     public Boolean equals(Polynome other) {
         if (_polySize != other.get_size())
             return false;
@@ -219,15 +288,17 @@ public class Polynome {
         for (int ind = 0; ind < _polySize; ind++) {
             if (!(this.getMonomialByIndex(ind).equals(other.getMonomialByIndex(ind))))
                 return false;
-
         }
-
         return true;
-
     }
 
-//
 
+
+
+
+    /**
+     * Prints out the main menu for the user
+     */
     public static void showPolynomeMenu() {
 
         System.out.println("\nMAIN MENU");
@@ -245,6 +316,14 @@ public class Polynome {
 
     }
 
+
+    /**
+     * Gets all the coefficient and power values for a certain polynomial
+     * @param sc - Scans the values from user
+     * @param coefArr - The array to fill in with coefficient values
+     * @param powerArr - The array to fill in with power values
+     * @param polynomeNumber - Serial number of the polynome to fill in (values 1 or 2)
+     */
     public static void getPolynomeValues(Scanner sc, ArrayList<Double> coefArr, ArrayList<Integer> powerArr, int polynomeNumber) {
 
         if (coefArr != null)
@@ -259,6 +338,13 @@ public class Polynome {
     }
 
 
+
+    /**
+     * Gets a list of numbers from user and assignes
+     * them as a set of coefficients for a polynomial
+     * @param sc - Scans the user input
+     * @param coefArr - The array , to fill in with the coefficient values
+     */
     private static void getCoefArr(Scanner sc, ArrayList<Double> coefArr) {
         double coefVal;
         String valuesLine;
@@ -272,7 +358,6 @@ public class Polynome {
             coefVal = valuesSc.nextDouble();
             try {
                 coefArr.add(coefVal);
-//                System.out.println(coefVal + " is added to coefArr.");
             } catch (InputMismatchException e) {
                 System.out.println("Input is invalid. please try again.");
                 throw new InputMismatchException();
@@ -280,7 +365,7 @@ public class Polynome {
         }
         valuesSc.close();
     }
-
+    // Gets a list of numbers from user and assignes them as a set of powers for a polynomial
     private static void getPowerArr(Scanner sc, ArrayList<Integer> powerArr) {
         int powerVal;
         String valuesLine;
@@ -304,6 +389,12 @@ public class Polynome {
     }
 
 
+
+
+    /**
+     * Gets the size of the calling polynomial
+     * @return The size of the calling polynomial
+     */
     public int get_size() {
         return _polySize;
     }

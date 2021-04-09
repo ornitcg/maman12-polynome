@@ -47,55 +47,79 @@ public class PolynomeTester {
                     break;
 
                 case 2: //Print Polynomials
-                    if (pol1 == null || pol2 == null) {
-                        System.out.println("One of your polynomials may be empty, please add polynomials to play with");
-                        break;
+//                    if (pol1 == null || pol2 == null) {
+//                        System.out.println("One of your polynomials may be empty, please add polynomials to play with");
+//                        break;
+//                    }
+                    System.out.println("You chose to print polynomials.");
+
+                    try {
+                        System.out.println("Polynomial #1 :" + pol1.toString());
+                        System.out.println("-------------------------");
+                        System.out.println("Polynomial #2 :" + pol2.toString());
                     }
-                    System.out.println("Polynomial #1 :");
-                    System.out.println(pol1.toString());
-                    System.out.println("-------------------------");
-                    System.out.println("Polynomial #2 :");
-                    System.out.println(pol2.toString());
+                    catch (Exception e){
+                        System.out.println("There are no polynomial to print. Please Insert polynomials first.");
+
+                    }
                     break;
 
                 case 3: // sum
                     System.out.println("You chose to sum the two polynomials.");
-                    System.out.println(pol1.toString());
-                    System.out.println(pol2.toString());
-                    System.out.println("The result is:");
-                    System.out.println(pol1.plus(pol2).toString());
+                    try {
+                        System.out.println("Polynomial #1: " + pol1.toString());
+                        System.out.println("Polynomial #2: " + pol2.toString());
+                        System.out.println("Polynomial#1 + Polynomial#2: " +pol1.plus(pol2).toString());
+                    }
+                    catch (NullPointerException e){
+                        System.out.println("There are no polynomial to calculate their sum. Please Insert polynomials first.");
+                    }
                     break;
                 case 4:// polynomial1 - polynomial2
-                    System.out.println("You chose to Subtract polynomial#1 from polynomial#2.");
-                    System.out.println(pol1.toString());
-                    System.out.println(pol2.toString());
-                    System.out.println("The result is:");
-                    System.out.println(pol1.minus(pol2).toString());
+                    try {
+                        System.out.println("You chose to Subtract polynomial#1 from polynomial#2.");
+                        System.out.println("Polynomial #1: " + pol1.toString());
+                        System.out.println("Polynomial #2: " + pol2.toString());
+                        System.out.println("\nPolynomial#2 - Polynomial#1: " + pol2.minus(pol1).toString());
+
+                    }
+                    catch (NullPointerException e) {
+                        System.out.println("There are no polynomial to subtract. Please Insert polynomials first.");
+                    }
+
                     break;
                 case 5: //polynomial2 - polynomial1
                     System.out.println("You chose to Subtract polynomial#2 from polynomial#1.");
-                    System.out.println(pol1.toString());
-                    System.out.println(pol2.toString());
-                    System.out.println("The result is:");
-                    System.out.println(pol2.minus(pol1).toString());
+                    try {
+                        System.out.println("Polynomial #1: " + pol1.toString());
+                        System.out.println("Polynomial #2: " + pol2.toString());
+                        System.out.println("\nPolynomial#1 - Polynomial#2: " + pol1.minus(pol2).toString());
+
+                    }
+                    catch (NullPointerException e){
+                        System.out.println("There are no polynomial to subtract. Please Insert polynomials first.");
+                    }
                     break;
                 case 6://Derive polynomial#1
                     System.out.println("You chose to derive polynomial#1.");
-                    System.out.println("The original polynomial is: " + pol1.toString());
+                    try {
+                        System.out.println("The original polynomial is: " + pol1.toString());
 
-                    System.out.println("The derivative is:");
-                    System.out.println((pol1.derivative()).toString());
+                        System.out.println("Polynomial#1 derivative: " + (pol1.derivative()).toString());
+                    }
+                    catch(NullPointerException e){
+                        System.out.println("There is no polynomial to derive. Please Insert polynomials first.");
+                    }
                     break;
                 case 7://Derive polynomial#2
+                    System.out.println("You chose to derive polynomial#2.");
                     try {
-                        System.out.println("You chose to derive polynomial#2.");
                         System.out.println("The original polynomial is: " + pol2.toString());
 
-                        System.out.println("The derivative is:");
-                        System.out.println((pol2.derivative()).toString());
+                        System.out.println("Polynomial#2 derivative: " + (pol2.derivative()).toString());
                     }
-                    catch (Exception e){
-                        System.out.println();
+                    catch (NullPointerException e){
+                        System.out.println("There is no polynomial to derive. Please Insert polynomials first.");
                     }
                     break;
                 case 8://compare polynomials
@@ -106,31 +130,27 @@ public class PolynomeTester {
                         else System.out.println("The polynomials are not equals.");
                     }
                     catch (Exception e){
-                        System.out.println("One or both polynomial(s) is (are) missing");
+                        System.out.println("There are no polynomial to compare. Please Insert polynomials first.");
                     }
 
                     break;
                 case 9://quit
+                    System.out.println("You chose to quit. Bye Bye!");
+
                     break;
                 default:
-
                     break;
-
             } //  end switch
-            System.out.println("\nWhat would you like to do next?");
-            Polynome.showPolynomeMenu();
-            choice = sc.nextInt();
+            if (choice != 9) {
+                System.out.println("\nWhat would you like to do next?");
+                Polynome.showPolynomeMenu();
+                choice = sc.nextInt();
+            }
         }
 
         //Polynome poly1  = getPolynomValues(sc);
-        System.out.println("Lets fill polynome #2:");
+        //System.out.println("Lets fill polynome #2:");
         //Polynome poly2  = getPolynomValues(sc);
-
-
-
-
-
-
 
     } // end main
 
