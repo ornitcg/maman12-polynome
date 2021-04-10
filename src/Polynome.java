@@ -324,17 +324,23 @@ public class Polynome {
      * @param powerArr - The array to fill in with power values
      * @param polynomeNumber - Serial number of the polynome to fill in (values 1 or 2)
      */
-    public static void getPolynomeValues(Scanner sc, ArrayList<Double> coefArr, ArrayList<Integer> powerArr, int polynomeNumber) {
+    public static void getPolynomeValues(Scanner sc, ArrayList<Double> coefArr, ArrayList<Integer> powerArr, int polynomeNumber) throws InputMismatchException {
 
         if (coefArr != null)
             coefArr.clear();
         if (powerArr != null)
             powerArr.clear();
 
-        System.out.println("Lets fill polynomial #" + polynomeNumber + ": ");
+        System.out.println("\nLets fill polynomial #" + polynomeNumber + ": ");
         getCoefArr(sc, coefArr);
         System.out.println("Now please insert a set of integer-type values to be used as powers in your polynomial");
-        getPowerArr(sc, powerArr);
+        try {
+            getPowerArr(sc, powerArr);
+        }
+        catch (InputMismatchException e){
+            throw new InputMismatchException(e.getMessage());
+        }
+
     }
 
 
@@ -359,31 +365,33 @@ public class Polynome {
             try {
                 coefArr.add(coefVal);
             } catch (InputMismatchException e) {
-                System.out.println("Input is invalid. please try again.");
-                throw new InputMismatchException();
+                throw new InputMismatchException("********* ERROR ********* \n Input is invalid. please try again.");
             }
         }
         valuesSc.close();
     }
     // Gets a list of numbers from user and assignes them as a set of powers for a polynomial
-    private static void getPowerArr(Scanner sc, ArrayList<Integer> powerArr) {
-        int powerVal;
+    private static void getPowerArr(Scanner sc, ArrayList<Integer> powerArr) throws InputMismatchException{
+        int powerVal=0;
+        double tempVal = 0;
+
         String valuesLine;
         System.out.println("Please add your power value(s) in one line, saparated with spaces");
 
         valuesLine = sc.nextLine();
         Scanner valuesSc = new Scanner(valuesLine);
 
-        while (valuesSc.hasNextInt()) {
+        while (valuesSc.hasNextDouble()) {
 
-            powerVal = valuesSc.nextInt();
-            try {
+            tempVal = valuesSc.nextDouble();
+            powerVal = (int) tempVal;
+            if (tempVal != powerVal)
+                throw new InputMismatchException("********* ERROR ********* \nPower values must be integers. Try again");
+
+            if (powerVal < 0)
+                throw new InputMismatchException("********* ERROR ********* \nPower values must be positive. Try again");
+
                 powerArr.add(powerVal);
-//                System.out.println(powerVal + " is added to powerArr.");
-            } catch (InputMismatchException e) {
-                System.out.println("Input is invalid. please try again.");
-                throw new InputMismatchException();
-            }
         }
         valuesSc.close();
     }

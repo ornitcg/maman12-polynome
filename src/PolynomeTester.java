@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class PolynomeTester {
@@ -18,27 +19,38 @@ public class PolynomeTester {
         while (choice != 9) {
             switch (choice) {
                 case 1: // Insert New polynomes
+                    pol1 = null;
+                    pol2 = null;
                     sc.nextLine();
                     System.out.println("Please insert values for two polynomials as follows:");
-                    Polynome.getPolynomeValues(sc, coefArr, powerArr, Polynome.FIRST);
-//                    fillcoef(coefArr,1);
-//                    fillpower(powerArr,1);
+                    try {
+                        Polynome.getPolynomeValues(sc, coefArr, powerArr, Polynome.FIRST);
+                    }
+                    catch (InputMismatchException e){
+                        System.out.println(e.getMessage());
+                        break;
+                    }
+
                     try {
                         pol1 = new Polynome(coefArr, powerArr);
-                        System.out.println(pol1.toString());
+                        System.out.println("Inserted polynomial #1: " +pol1.toString());
                     }
                     catch (ArrayIndexOutOfBoundsException e){
                         System.out.println(e.getMessage());
                         break;
                     }
-                    Polynome.getPolynomeValues(sc, coefArr, powerArr, Polynome.SECOND);
-//                    coefArr.clear();
-//                    powerArr.clear();
-//                    fillcoef(coefArr,2);
-//                    fillpower(powerArr,2);
+
+                    try {
+                        Polynome.getPolynomeValues(sc, coefArr, powerArr, Polynome.SECOND);
+                    }
+                    catch (InputMismatchException e){
+                        System.out.println(e.getMessage());
+                        break;
+                    }
+
                     try {
                         pol2 = new Polynome(coefArr, powerArr);
-                        System.out.println(pol2.toString());
+                        System.out.println("Inserted polynomial #2: " + pol2.toString());
                     }
                     catch (ArrayIndexOutOfBoundsException e){
                         System.out.println(e.getMessage());
@@ -47,10 +59,7 @@ public class PolynomeTester {
                     break;
 
                 case 2: //Print Polynomials
-//                    if (pol1 == null || pol2 == null) {
-//                        System.out.println("One of your polynomials may be empty, please add polynomials to play with");
-//                        break;
-//                    }
+
                     System.out.println("You chose to print polynomials.");
 
                     try {
@@ -60,7 +69,6 @@ public class PolynomeTester {
                     }
                     catch (Exception e){
                         System.out.println("There are no polynomial to print. Please Insert polynomials first.");
-
                     }
                     break;
 
@@ -126,8 +134,8 @@ public class PolynomeTester {
                     try {
                         System.out.println("You chose to compare the two polynomials.");
                         if (pol1.equals(pol2))
-                            System.out.println("The polynomials are equals.");
-                        else System.out.println("The polynomials are not equals.");
+                            System.out.println("The polynomials ARE equal.");
+                        else System.out.println("The polynomials are NOT equal.");
                     }
                     catch (Exception e){
                         System.out.println("There are no polynomial to compare. Please Insert polynomials first.");
@@ -139,6 +147,7 @@ public class PolynomeTester {
 
                     break;
                 default:
+                    System.out.println("Choice is not in menu. please try again!");
                     break;
             } //  end switch
             if (choice != 9) {
@@ -148,36 +157,11 @@ public class PolynomeTester {
             }
         }
 
-        //Polynome poly1  = getPolynomValues(sc);
-        //System.out.println("Lets fill polynome #2:");
-        //Polynome poly2  = getPolynomValues(sc);
-
     } // end main
 
-    public static void fillcoef(ArrayList<Double> coefArr, int number){
-        if (number == 1) {
-            coefArr.add(1.0);
-            coefArr.add(0.0);
-
-        }
-        else {
-            coefArr.add(1.0);
-
-
-        }
-
+    private static void resetPolynomial(Polynome pol) {
+        pol = null;
     }
 
-    public static void fillpower(ArrayList<Integer> powerArr, int number){
-        if (number == 1) {
-            powerArr.add(3);
-            powerArr.add(2);
-
-        }
-        else {
-            powerArr.add(3);
-                   }
-
-    }
 
 } // end class
