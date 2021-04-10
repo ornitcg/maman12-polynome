@@ -7,7 +7,6 @@ public class PolynomeTester {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Integer choice = null;
         ArrayList<Double> coefArr = new ArrayList<Double>();
         ArrayList<Integer> powerArr = new ArrayList<Integer>();
         Polynome pol1 = null;
@@ -15,8 +14,10 @@ public class PolynomeTester {
 
         System.out.println("Welcome to the polynomial zone! what would you like to do?");
         Polynome.showPolynomeMenu();
-        choice = sc.nextInt();
+        Integer choice = sc.nextInt();
+
         while (choice != 9) {
+
             switch (choice) {
                 case 1: // Insert New polynomes
                     pol1 = null;
@@ -142,20 +143,19 @@ public class PolynomeTester {
                     }
 
                     break;
-                case 9://quit
-                    System.out.println("You chose to quit. Bye Bye!");
 
-                    break;
                 default:
                     System.out.println("Choice is not in menu. please try again!");
                     break;
             } //  end switch
-            if (choice != 9) {
-                System.out.println("\nWhat would you like to do next?");
-                Polynome.showPolynomeMenu();
-                choice = sc.nextInt();
-            }
-        }
+
+
+            System.out.println("\nWhat would you like to do next?");
+            Polynome.showPolynomeMenu();
+            choice = sc.nextInt();
+
+        }//end while
+        System.out.println("You chose to quit. Bye Bye!");
 
     } // end main
 

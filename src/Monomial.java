@@ -106,9 +106,7 @@ public class Monomial implements Comparable{
      * and, false, otherwise
      */
     public Boolean equals(Monomial other){
-        if (_coefficient == other.get_coefficient() && _power == other.get_power())
-            return true;
-        return false;
+        return _coefficient == other.get_coefficient() && _power == other.get_power();
     }
 
     /**
